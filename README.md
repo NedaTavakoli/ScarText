@@ -70,6 +70,22 @@ On the 64 held-out reports, few-shot prompting (5 examples) reached 95.3% for Qw
 
 \*The rules were developed with the expert readers, so the NLP accuracy is not an independent estimate.
 
+## Reproducing the paper
+
+Every model in the paper has its script in `src/`. The tool (`classify_llm`) offers the Ollama models, which matched the rules; MedGemma-4B-IT and Flan-T5-base ran through Hugging Face Transformers in the paper and are kept as research scripts.
+
+| Model | Runner in the paper | Script | Zero-shot accuracy (264 reports) |
+|---|---|---|---|
+| Rule-based NLP | Python / PySpark (CPU) | `src/cardiac_mri_nlp_5class.py` | 90.2%* |
+| Qwen3-32B | Ollama | `src/cardiac_mri_llm_5class.py`, `src/rerun_llm_expert264.py` | 89.8% |
+| Llama-3.1-70B | Ollama | same | 88.3% |
+| Llama-3.1-8B | Ollama | same | 79.2% |
+| MedGemma-4B-IT | Hugging Face Transformers, 4-bit NF4 (needs accepting Google's terms for `google/medgemma-4b-it`) | `src/cardiac_mri_medgemma_fewshot.py` | 57.2% |
+| Flan-T5-base | Hugging Face Transformers (512-token input) | `src/cardiac_mri_flanT5_5class.py` | ≤20.8% |
+| Few-shot (k=5), all Ollama models and MedGemma | as above | `src/cardiac_mri_llm_fewshot_all.py`, `src/fewshot_curve.py`, `src/fewshot_order_test.py` | see the paper |
+
+The scripts read the study's reports, which are not distributed; point `CMR_DATA_DIR` at your own data.
+
 ## Repository layout
 
 | Path | What it is |

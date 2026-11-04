@@ -34,13 +34,39 @@ METHOD_NOTE = (
     "The NLP's score is not independent, because its rules were developed with the expert readers. Where the two agreed "
     "(85.6% of reports), 97.8% were correct, so the demo flags disagreements for expert review."
 )
+if PUBLIC:
+    METHOD_NOTE += (" Online, Qwen3-32B runs through Hugging Face Transformers (FP8 weights) rather than the paper's Ollama "
+                    "setup, so its answers can differ slightly from the paper's runs.")
 CASES = {**{engine.CLASS_DISPLAY[c]: TEMPLATES[c] for c in engine.CLASSES}, **EXTRA_CASES}
 FIRST = engine.CLASS_DISPLAY[engine.CLASSES[0]]
 
 ONLINE_LLM_NOTE = ("The online demo runs the rules only. To add the LLMs, run the quickstart notebook or this demo "
                    "on your own computer with Ollama (see the GitHub repository).")
-backend = llm_client.NoBackend(ONLINE_LLM_NOTE) if PUBLIC else llm_client.get_backend()
-fewshot = llm_client.NoBackend(ONLINE_LLM_NOTE) if PUBLIC else llm_client.get_fewshot_backend()   # opt-in: CMR_DEMO_FEWSHOT=1
+ONLINE_FS_NOTE = ("Few-shot needs expert-labeled example reports, which are not shared. Run the notebook or this demo "
+                  "on your own computer with your own labeled reports.")
+if PUBLIC:
+    # Online: zero-shot Qwen3-32B on Hugging Face ZeroGPU (CMR_SPACE_LLM=0 turns it off). If it cannot load, the
+    # rules run alone, and a placeholder GPU function keeps ZeroGPU from stopping an app that declares none.
+    try:
+        if os.environ.get("CMR_SPACE_LLM", "1") == "0":
+            raise ImportError("turned off")
+        import zerogpu_llm
+        backend = zerogpu_llm.ZeroGPUBackend()
+    except Exception as e:
+        print("Online LLM not loaded:", type(e).__name__, str(e)[:200])
+        backend = llm_client.NoBackend(ONLINE_LLM_NOTE)
+        try:
+            import spaces
+
+            @spaces.GPU
+            def _zerogpu_placeholder():
+                return None
+        except ImportError:
+            pass
+    fewshot = llm_client.NoBackend(ONLINE_FS_NOTE)
+else:
+    backend = llm_client.get_backend()
+    fewshot = llm_client.get_fewshot_backend()   # opt-in: CMR_DEMO_FEWSHOT=1
 FEWSHOT_ON = fewshot.configured
 FS_SOURCE, FS_NOTE = "Few-shot LLM", ""
 
