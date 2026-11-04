@@ -25,20 +25,38 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     pg = b.new_page(viewport={"width": 1600, "height": 1000}, device_scale_factor=1.2, color_scheme="light")
     pg.goto(os.environ.get("CMR_DEMO_URL", "http://127.0.0.1:7860")); pg.wait_for_timeout(3000)
-    names = []
+    names, results = [], []
     for i, name in enumerate(CASES, 1):
         pg.get_by_label("Synthetic report").first.click(); pg.wait_for_timeout(400)
-        pg.get_by_role("option", name=name, exact=True).click(); pg.wait_for_timeout(1500)
-        # wait for the LLM card to finish: an answer, an agreement line, or "NLP only"
+        pg.get_by_role("option", name=name, exact=True).click()
+        # wait for the new request to start, then for every LLM card to finish
+        try:
+            pg.wait_for_function("() => document.body.innerText.includes('Sending the report')", timeout=8000)
+        except Exception:
+            pass
         pg.wait_for_function("""() => { const t = document.body.innerText;
             return !t.includes('Sending the report') && (t.includes('Agrees with the rules') || t.includes('Differs from the rules') || t.includes('NLP only')); }""", timeout=180000)
         pg.wait_for_timeout(800)
+        body = pg.inner_text("body")
+        order = sorted((body.find(v, k), v) for v in ("Agrees with the rules", "Differs from the rules")
+                       for k in [i for i in range(len(body)) if body.startswith(v, i)])
+        results.append((name, [v for _, v in sorted(set(order))]))
         f = os.path.join(FR, f"{i:02d}.png"); pg.screenshot(path=f); names.append(f)
     b.close()
 
+def summary(results):
+    """The closing line, from the answers on screen: card 1 is zero-shot, card 2 few-shot."""
+    parts = []
+    for i, label in enumerate(["zero-shot", "few-shot"]):
+        off = [n for n, v in results if len(v) > i and v[i].startswith("Differs")]
+        if any(len(v) > i for _, v in results):
+            parts.append(f"{label} agreed on all {len(results)}" if not off else f"{label} disagreed on: {', '.join(off).lower()}")
+    return ("Here " + "; ".join(parts) + ".") if parts else ""
+
+print(results)
 card(os.path.join(FR, "99.png"), "Rules and LLMs together",
      ["Zero-shot: the paper's prompt, no labeled examples.", "Few-shot: 5 expert-labeled examples per report, chosen by similarity.",
-      "Agree with the rules: accept. Disagree: send for expert review.", os.environ.get("CMR_DEMO_SUMMARY", "")])
+      "Agree with the rules: accept. Disagree: send for expert review.", summary(results)])
 
 frames = sorted(os.path.join(FR, f) for f in os.listdir(FR) if f.endswith(".png"))
 lst = os.path.join(SP, "frames.txt")

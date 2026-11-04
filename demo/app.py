@@ -17,10 +17,16 @@ import engine
 import llm_client
 from templates import EXTRA_CASES, TEMPLATES
 
-BANNER = (
-    '<div style="background:#B71C1C;color:#FFFFFF;border-radius:8px;padding:10px 16px;font-weight:600;text-align:center">'
-    "Research use only. Not for clinical use. The built-in reports are synthetic. "
-    "Paste a real report only on a computer approved for patient data.</div>"
+# Online (Hugging Face Spaces sets SPACE_ID): only the rules run, and visitors are told not to upload patient data.
+PUBLIC = bool(os.environ.get("SPACE_ID")) or os.environ.get("CMR_DEMO_PUBLIC") == "1"
+NOTICE = (
+    '<div style="color:#6B6B6B;font-size:13px;margin-bottom:4px">'
+    + ("Research use only. Not for clinical use. The built-in reports are synthetic. Reports you paste or upload are "
+       "processed on this server and not stored, but <b>do not upload identifiable patient information</b>."
+       if PUBLIC else
+       "Research use only. Not for clinical use. The built-in reports are synthetic. "
+       "Paste a real report only on a computer approved for patient data.")
+    + "</div>"
 )
 METHOD_NOTE = (
     "The NLP class comes from the study's rule-based code. Highlights show the terms it looks for, and a highlighted term "
@@ -31,8 +37,10 @@ METHOD_NOTE = (
 CASES = {**{engine.CLASS_DISPLAY[c]: TEMPLATES[c] for c in engine.CLASSES}, **EXTRA_CASES}
 FIRST = engine.CLASS_DISPLAY[engine.CLASSES[0]]
 
-backend = llm_client.get_backend()
-fewshot = llm_client.get_fewshot_backend()   # opt-in: CMR_DEMO_FEWSHOT=1
+ONLINE_LLM_NOTE = ("The online demo runs the rules only. To add the LLMs, run the quickstart notebook or this demo "
+                   "on your own computer with Ollama (see the GitHub repository).")
+backend = llm_client.NoBackend(ONLINE_LLM_NOTE) if PUBLIC else llm_client.get_backend()
+fewshot = llm_client.NoBackend(ONLINE_LLM_NOTE) if PUBLIC else llm_client.get_fewshot_backend()   # opt-in: CMR_DEMO_FEWSHOT=1
 FEWSHOT_ON = fewshot.configured
 FS_SOURCE, FS_NOTE = "Few-shot LLM", ""
 
@@ -91,7 +99,7 @@ def load_upload(path):
 
 def build():
     with gr.Blocks(title="CMR Scar Classifier Demo", delete_cache=(3600, 3600)) as demo:
-        gr.HTML(BANNER)
+        gr.HTML(NOTICE)
         gr.Markdown("# Myocardial scar classification from cardiac MRI reports")
         with gr.Row():
             with gr.Column(scale=5):
@@ -122,12 +130,12 @@ def build():
 
 
 if __name__ == "__main__":
-    # Loopback only, with no public share link.
+    # Loopback only on a personal computer; all interfaces only when hosted (Hugging Face Spaces). Never a share link.
     build().queue().launch(
-        server_name="127.0.0.1",
+        server_name="0.0.0.0" if PUBLIC else "127.0.0.1",
         server_port=int(os.environ.get("CMR_DEMO_PORT", "7860")),
         share=False,
-        inbrowser=os.environ.get("CMR_DEMO_NO_BROWSER") != "1",
+        inbrowser=not PUBLIC and os.environ.get("CMR_DEMO_NO_BROWSER") != "1",
         footer_links=["settings"],
         theme=gr.themes.Default(font=gr.themes.Font("system-ui"), font_mono=gr.themes.Font("monospace")),
     )

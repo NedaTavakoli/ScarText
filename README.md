@@ -2,7 +2,7 @@
 
 **Classify myocardial scar etiology from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no-scar or not-specified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb)
+[![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face-yellow)](https://huggingface.co/spaces/NedaTavakoli/CMRReportAnalyzer) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb)
 
 Code for the paper **"Can AI Identify Myocardial Scar Etiology from Cardiac MRI Reports? Benchmarking Large Language Models vs. Natural Language Processing at Scale"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
 
@@ -13,6 +13,8 @@ Code for the paper **"Can AI Identify Myocardial Scar Etiology from Cardiac MRI 
 [![Demo: rule-based NLP, zero-shot and few-shot Qwen3-32B on synthetic reports](demo/demo_preview.gif)](demo/CMR_scar_demo_synthetic.mp4)
 
 Each report is shown with three results side by side: the rule-based NLP, zero-shot Qwen3-32B and few-shot Qwen3-32B. Where an LLM agrees with the rules the report is accepted; where it disagrees, it is flagged for expert review. All reports shown are synthetic. [Watch the full video (44 s)](demo/CMR_scar_demo_synthetic.mp4).
+
+**Try it online:** the [live demo](https://huggingface.co/spaces/NedaTavakoli/CMRReportAnalyzer) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules only; the LLMs run on your own computer (below). Do not upload identifiable patient information.
 
 ## Quick start
 
