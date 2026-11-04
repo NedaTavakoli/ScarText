@@ -15,5 +15,5 @@ authors:
   - family-names: Kim
     given-names: Daniel
 license: MIT
-repository-code: "https://github.com/neda-tavakoli/cmrreportanalyzer"
+repository-code: "https://github.com/NedaTavakoli/CMRReportAnalyzer"
 version: "0.1.0"

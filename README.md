@@ -2,7 +2,7 @@
 
 **Classify myocardial scar etiology from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no-scar or not-specified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/neda-tavakoli/cmrreportanalyzer/blob/main/notebooks/quickstart.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb)
 
 Code for the paper **"Can AI Identify Myocardial Scar Etiology from Cardiac MRI Reports? Benchmarking Large Language Models vs. Natural Language Processing at Scale"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
 
@@ -16,12 +16,12 @@ Each report is shown with three results side by side: the rule-based NLP, zero-s
 
 ## Quick start
 
-**In the browser:** open the [quickstart notebook in Colab](https://colab.research.google.com/github/neda-tavakoli/cmrreportanalyzer/blob/main/notebooks/quickstart.ipynb).
+**In the browser:** open the [quickstart notebook in Colab](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb).
 
 **On your computer:**
 
 ```bash
-git clone https://github.com/neda-tavakoli/cmrreportanalyzer.git
+git clone https://github.com/NedaTavakoli/CMRReportAnalyzer.git
 cd cmrreportanalyzer
 pip install -r notebooks/requirements-notebook.txt
 ```
