@@ -22,7 +22,16 @@ _model = AutoModelForCausalLM.from_pretrained(MODEL_ID, torch_dtype="auto").to("
 _system, _user_template = llm_client.load_prompt()
 
 
-@spaces.GPU(duration=60)
+_warm = False
+
+
+def _gpu_seconds(prompt):
+    """The first call after a restart moves the weights onto the GPU and needs about a minute; later calls take a few
+    seconds. Requests stay short otherwise, because a request above a visitor's remaining free quota is refused."""
+    return 30 if _warm else 120
+
+
+@spaces.GPU(duration=_gpu_seconds)
 def _generate(prompt):
     ids = _tok(prompt, return_tensors="pt").to("cuda")
     out = _model.generate(**ids, max_new_tokens=512, do_sample=False)
@@ -36,10 +45,15 @@ class ZeroGPUBackend:
         messages = [{"role": "system", "content": _system},
                     {"role": "user", "content": _user_template.format(report_text=str(text)[:llm_client.MAX_CHARS])}]
         prompt = _tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False)
+        global _warm
         try:
             raw = _generate(prompt)
+            _warm = True
         except Exception as e:   # quota reached, GPU busy, or a timeout: show the rules alone
-            return llm_client.LLMResult(None, f"The online LLM is not available right now ({type(e).__name__}). "
+            _warm = False         # a new GPU may have been assigned, so the next call gets the longer request
+            print("ZeroGPU call failed:", type(e).__name__, str(e)[:500])
+            detail = str(e).strip()[:200] or type(e).__name__
+            return llm_client.LLMResult(None, f"The online LLM is not available right now: {detail} "
                                               "Signed-in Hugging Face users get more free GPU time.")
         label = llm_client.parse_answer(raw)
         if label is None:

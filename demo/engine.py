@@ -227,10 +227,16 @@ def nlp_card(result):
                  f"Rule match: {result['pattern']}" if result["pattern"] else "")
 
 
+# Online (Hugging Face Spaces) the LLM runs on a shared GPU rather than a local Ollama server.
+_ONLINE = bool(os.environ.get("SPACE_ID")) or os.environ.get("CMR_DEMO_PUBLIC") == "1"
+WAITING_TEXT = ("Running Qwen3-32B on a shared GPU. The first report after a quiet period can take up to 2 minutes."
+                if _ONLINE else "Sending the report to the local Ollama server.")
+
+
 def llm_card(llm, nlp_label=None, source="Zero-shot LLM", agree_note="In the study, 97.8% of such reports were correct."):
     """Card for an llm_client.LLMResult. The 97.8% is the paper's zero-shot Qwen3-32B agreement result."""
     if llm is None:
-        return _card(source, "Waiting", "Sending the report to the local Ollama server.", NEUTRAL_COLORS)
+        return _card(source, "Waiting", WAITING_TEXT, NEUTRAL_COLORS)
     if llm.label is None:
         return _card(source, "NLP only", llm.message, NEUTRAL_COLORS)
     # The paper's agreement analysis: where the rules and Qwen3-32B agreed, 97.8% of expert reports were correct.
