@@ -26,9 +26,10 @@ _warm = False
 
 
 def _gpu_seconds(prompt):
-    """The first call after a restart moves the weights onto the GPU and needs about a minute; later calls take a few
-    seconds. Requests stay short otherwise, because a request above a visitor's remaining free quota is refused."""
-    return 30 if _warm else 120
+    """The first call after a restart also moves the weights onto the GPU; later calls take a few seconds. Requests
+    are kept short because ZeroGPU refuses a request above a visitor's remaining daily quota (a few minutes on a
+    free account), and it counts more than the seconds requested."""
+    return 20 if _warm else 45
 
 
 @spaces.GPU(duration=_gpu_seconds)
@@ -52,9 +53,12 @@ class ZeroGPUBackend:
         except Exception as e:   # quota reached, GPU busy, or a timeout: show the rules alone
             _warm = False         # a new GPU may have been assigned, so the next call gets the longer request
             print("ZeroGPU call failed:", type(e).__name__, str(e)[:500])
+            if "quota" in str(e).lower():
+                return llm_client.LLMResult(None, "Your free GPU time on Hugging Face is used up for today, so only the "
+                                                  "rules ran. It resets daily; signing in to Hugging Face gives more. "
+                                                  "The notebook runs the LLM on your own computer.")
             detail = str(e).strip()[:200] or type(e).__name__
-            return llm_client.LLMResult(None, f"The online LLM is not available right now: {detail} "
-                                              "Signed-in Hugging Face users get more free GPU time.")
+            return llm_client.LLMResult(None, f"The online LLM is not available right now: {detail} Try again in a minute.")
         label = llm_client.parse_answer(raw)
         if label is None:
             return llm_client.LLMResult(None, "The model's answer was not one of the five classes. In the paper this counts as missing.")
