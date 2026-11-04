@@ -31,7 +31,7 @@ NOTICE = (
 METHOD_NOTE = (
     "The NLP class comes from the study's rule-based code. Highlights show the terms it looks for, and a highlighted term "
     "does not always decide the class. On 264 expert-labeled reports, the NLP scored 90.2% and zero-shot Qwen3-32B 89.8%. "
-    "The NLP's score is not independent, because its rules were developed with the expert readers. Where the two agreed "
+    "The rules were written by a cardiologist and tested against two radiologists. Where the two methods agreed "
     "(85.6% of reports), 97.8% were correct, so the demo flags disagreements for expert review."
 )
 if PUBLIC:

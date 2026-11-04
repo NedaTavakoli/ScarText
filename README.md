@@ -12,7 +12,7 @@ Code for the paper **"Can AI Identify Myocardial Scar Etiology from Cardiac MRI 
 
 [![Demo: rule-based NLP, zero-shot and few-shot Qwen3-32B on synthetic reports](demo/demo_preview.gif)](demo/CMR_scar_demo_synthetic.mp4)
 
-Each report is shown with three results side by side: the rule-based NLP, zero-shot Qwen3-32B and few-shot Qwen3-32B. Where an LLM agrees with the rules the report is accepted; where it disagrees, it is flagged for expert review. All reports shown are synthetic. [Watch the full video (44 s)](demo/CMR_scar_demo_synthetic.mp4).
+Each report is shown with three results side by side: the rule-based NLP, zero-shot Qwen3-32B and few-shot Qwen3-32B. Where an LLM agrees with the rules the report is accepted; where it disagrees, it is flagged for expert review. All reports shown are synthetic. [Watch the full video (36 s)](demo/CMR_scar_demo_synthetic.mp4).
 
 **Try it online:** the [live demo](https://huggingface.co/spaces/tavakolineda/CMRReportAnalyzer) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules only; the LLMs run on your own computer (below). Do not upload identifiable patient information.
 
@@ -59,7 +59,7 @@ On 264 expert-labeled reports (two blinded readers, κ = 0.995):
 
 | Method | Accuracy |
 |---|---|
-| Rule-based NLP* | 90.2% (95% CI 86.0–93.2); all 37,869 reports in under 4 minutes on a CPU |
+| Rule-based NLP | 90.2% (95% CI 86.0–93.2); all 37,869 reports in under 4 minutes on a CPU |
 | Qwen3-32B, zero-shot | 89.8% (85.5–92.9) |
 | Llama-3.1-70B, zero-shot | 88.3% |
 | Llama-3.1-8B, zero-shot | 79.2% |
@@ -68,7 +68,7 @@ On 264 expert-labeled reports (two blinded readers, κ = 0.995):
 
 On the 64 held-out reports, few-shot prompting (5 examples) reached 95.3% for Qwen3-32B and 90.6% for Llama-3.1-70B (rule-based NLP: 92.2%). Where the rules and zero-shot Qwen3-32B agreed (85.6% of reports), 97.8% were correct.
 
-\*The rules were developed with the expert readers, so the NLP accuracy is not an independent estimate.
+The rules were written by a cardiologist and tested against two radiologists' blinded labels.
 
 ## Reproducing the paper
 
@@ -76,7 +76,7 @@ Every model in the paper has its script in `src/`. The tool (`classify_llm`) off
 
 | Model | Runner in the paper | Script | Zero-shot accuracy (264 reports) |
 |---|---|---|---|
-| Rule-based NLP | Python / PySpark (CPU) | `src/cardiac_mri_nlp_5class.py` | 90.2%* |
+| Rule-based NLP | Python / PySpark (CPU) | `src/cardiac_mri_nlp_5class.py` | 90.2% |
 | Qwen3-32B | Ollama | `src/cardiac_mri_llm_5class.py`, `src/rerun_llm_expert264.py` | 89.8% |
 | Llama-3.1-70B | Ollama | same | 88.3% |
 | Llama-3.1-8B | Ollama | same | 79.2% |

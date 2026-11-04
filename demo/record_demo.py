@@ -1,4 +1,4 @@
-"""Record the synthetic-only demo: one screen per synthetic report, then a closing card -> demo/CMR_scar_demo_synthetic.mp4.
+"""Record the synthetic-only demo: one screen per synthetic report -> demo/CMR_scar_demo_synthetic.mp4.
 
 Start the app first (CMR_DEMO_NO_BROWSER=1 python demo/app.py), then run this with Playwright and Pillow installed
 (pip install playwright pillow; python -m playwright install chromium). Needs ffmpeg. Frames go to a temporary folder."""
@@ -54,15 +54,14 @@ def summary(results):
     return ("Here " + "; ".join(parts) + ".") if parts else ""
 
 print(results)
-card(os.path.join(FR, "99.png"), "Rules and LLMs together",
-     ["Zero-shot: the paper's prompt, no labeled examples.", "Few-shot: 5 expert-labeled examples per report, chosen by similarity.",
-      "Agree with the rules: accept. Disagree: send for expert review.", summary(results)])
+print(summary(results))
+# No closing card: the video ends on the last report (author request); the summary is printed above.
 
 frames = sorted(os.path.join(FR, f) for f in os.listdir(FR) if f.endswith(".png"))
 lst = os.path.join(SP, "frames.txt")
 with open(lst, "w") as fh:
     for f in frames:
-        dur = 4 if os.path.basename(f) == "99.png" else 6
+        dur = 6
         fh.write(f"file '{f}'\nduration {dur}\n")
     fh.write(f"file '{frames[-1]}'\n")
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst,

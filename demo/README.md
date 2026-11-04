@@ -56,7 +56,7 @@ Both LLMs use the paper's code and settings: temperature 0, seed 42, an 8,192-to
 
 - **Highlights:** anatomy is yellow, LGE pattern is blue and disease is orange, as in Figure 2. No-LGE statements are green. Grey text is a History or Technique section that the pattern rules skip. A highlighted term does not always decide the class.
 - **Not classified:** the rules assign no class to reports that mention a cardiac device or have no LGE section.
-- **Accuracy:** the NLP's 90.2% on the 264 expert reports is not an independent estimate, because its rules were developed with the expert readers. The agreement figure comes from an exploratory analysis in the paper.
+- **Accuracy:** the rules were written by a cardiologist and tested against two radiologists, scoring 90.2% on 264 expert-labeled reports. The agreement figure comes from an exploratory analysis in the paper.
 
 **No copies:** an uploaded file's temporary copy is deleted as soon as its text is read.
 
