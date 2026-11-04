@@ -1,0 +1,17 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Heart failure with reduced ejection fraction.
+
+TECHNIQUE: Cine SSFP and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Moderately dilated with inferior akinesis and global hypokinesis. LVEF 32%.
+Right ventricle: Mildly reduced systolic function.
+Late gadolinium enhancement: Transmural delayed enhancement of the basal to mid inferior wall in the RCA territory. Separately, there is linear mid-wall delayed enhancement of the basal to mid septum, which does not follow a coronary territory.
+
+IMPRESSION:
+1. Prior inferior myocardial infarction in the RCA territory.
+2. Additional septal mid-wall fibrosis, a separate non-ischemic pattern.
+3. Moderately reduced left ventricular systolic function.

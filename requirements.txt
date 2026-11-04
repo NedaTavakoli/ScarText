@@ -1,0 +1,16 @@
+# Rule-based NLP (full-cohort run)
+pyspark==3.5.0
+pandas>=2.1
+numpy>=1.26
+openpyxl>=3.1
+# LLMs through Ollama and few-shot retrieval
+ollama>=0.3
+scikit-learn>=1.3
+scipy>=1.11
+tqdm>=4.66
+# MedGemma-4B-IT and Flan-T5-base (Hugging Face)
+torch>=2.1
+transformers>=4.45
+accelerate>=0.25
+bitsandbytes>=0.43
+# The demo has its own pinned requirements in demo/requirements.txt

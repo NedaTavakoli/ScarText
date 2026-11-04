@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper."
+title: "CMRReportAnalyzer. Code for: Can AI Identify Myocardial Scar Etiology from Cardiac MRI Reports? Benchmarking Large Language Models vs. Natural Language Processing at Scale"
+authors:
+  - family-names: Tavakoli
+    given-names: Neda
+  - family-names: Rahsepar
+    given-names: Amir Ali
+  - family-names: Ozturk
+    given-names: Onural
+  - family-names: Bagci
+    given-names: Ulas
+  - family-names: Lee
+    given-names: Daniel C.
+  - family-names: Kim
+    given-names: Daniel
+license: MIT
+repository-code: "https://github.com/neda-tavakoli/cmrreportanalyzer"
+version: "0.1.0"

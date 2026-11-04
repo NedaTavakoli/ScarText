@@ -1,0 +1,16 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Palpitations and an abnormal ECG.
+
+TECHNIQUE: Cine SSFP, T2 mapping, and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Normal size with mild global hypokinesis. LVEF 50%.
+Right ventricle: Normal size and systolic function.
+Late gadolinium enhancement: Mid-wall delayed enhancement of the basal inferolateral wall, with a separate subepicardial focus in the mid lateral wall. The subendocardium is spared.
+
+IMPRESSION:
+1. Mid-wall and subepicardial fibrosis of the lateral wall, in a pattern most consistent with prior myocarditis.
+2. Low-normal left ventricular systolic function.

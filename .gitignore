@@ -1,0 +1,15 @@
+# Study data are not distributed: never commit reports, labels or model outputs
+data/
+Results/
+*.xlsx
+*.xls
+*.csv
+*.jsonl
+*.h5
+*.dcm
+*.nii*
+# Python and editors
+__pycache__/
+*.pyc
+.venv/
+.DS_Store

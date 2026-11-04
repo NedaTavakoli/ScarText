@@ -1,0 +1,16 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Exertional chest pain. Assess myocardial viability.
+
+TECHNIQUE: Cine SSFP, T1 mapping, and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Mildly dilated with akinesis of the basal to mid anterior wall. LVEF 41%.
+Right ventricle: Normal size and systolic function.
+Late gadolinium enhancement: Subendocardial delayed enhancement of the basal to mid anterior and anteroseptal walls, involving 50 to 75 percent of wall thickness, in the LAD territory.
+
+IMPRESSION:
+1. Prior myocardial infarction in the LAD territory with limited viability of the anterior wall.
+2. Mildly reduced left ventricular systolic function.

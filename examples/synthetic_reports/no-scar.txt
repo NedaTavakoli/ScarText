@@ -1,0 +1,16 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Dyspnea on exertion. Evaluate for cardiomyopathy.
+
+TECHNIQUE: Cine SSFP, T1 mapping, and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Normal size, wall thickness, and systolic function. LVEF 62%.
+Right ventricle: Normal size and systolic function.
+Late gadolinium enhancement: No late gadolinium enhancement is seen in the left ventricular myocardium.
+
+IMPRESSION:
+1. Normal biventricular size and systolic function.
+2. No late gadolinium enhancement.

@@ -1,0 +1,16 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Family history of cardiomyopathy.
+
+TECHNIQUE: Cine SSFP and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Normal size, wall thickness, and systolic function. LVEF 59%.
+Right ventricle: Normal size and systolic function.
+Late gadolinium enhancement: No myocardial delayed enhancement is present. There is no evidence of scar or fibrosis.
+
+IMPRESSION:
+1. Normal biventricular size and systolic function.
+2. No evidence of myocardial scar.

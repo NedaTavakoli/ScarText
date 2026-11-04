@@ -1,0 +1,16 @@
+SYNTHETIC EXAMPLE. NOT A REAL PATIENT.
+
+PROCEDURE: Cardiac MRI with gadolinium contrast.
+
+INDICATION: Ventricular ectopy.
+
+TECHNIQUE: Cine SSFP and phase-sensitive inversion recovery imaging after intravenous gadolinium.
+
+FINDINGS:
+Left ventricle: Normal size with mildly reduced systolic function. LVEF 48%.
+Right ventricle: Normal size and systolic function.
+Late gadolinium enhancement: A small focus of delayed enhancement is present in the basal inferior wall.
+
+IMPRESSION:
+1. Small focal myocardial scar in the basal inferior wall. Its cause is uncertain on this study.
+2. Mildly reduced left ventricular systolic function.
