@@ -74,7 +74,7 @@ On the 64 held-out reports, few-shot prompting (5 examples) reached 95.3% for Qw
 
 | Path | What it is |
 |---|---|
-| `cmrreportanalyzer/` | The tool: `classify_scar`, `extract_lvef`, `explain`, `classify_llm`, `compare`, `analyze_csv` |
+| `cmrreportanalyzer/` | The tool: `classify_scar`, `extract_lvef`, `explain`, `show_report` (report in color), `classify_llm`, `compare`, `analyze_csv` |
 | `notebooks/quickstart.ipynb` | Step-by-step notebook (rules, your own report, zero-shot, agreement, few-shot, CSV) |
 | `examples/synthetic_reports/` | Six synthetic reports, one per class plus a negated-wording no-scar case |
 | `demo/` | Local web demo (Gradio): NLP, zero-shot and optional few-shot side by side |
