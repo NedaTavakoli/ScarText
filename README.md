@@ -68,7 +68,7 @@ On 264 expert-labeled reports (two blinded readers, κ = 0.995):
 
 On the 64 held-out reports, few-shot prompting (5 examples) reached 95.3% for Qwen3-32B and 90.6% for Llama-3.1-70B (rule-based NLP: 92.2%). Where the rules and zero-shot Qwen3-32B agreed (85.6% of reports), 97.8% were correct.
 
-The rules were written by a cardiologist and tested against two radiologists' blinded labels.
+The rules were derived by a cardiologist and two cardiothoracic radiologists, and their accuracy was measured against the radiologists' blinded labels.
 
 ## Reproducing the paper
 
