@@ -38,6 +38,7 @@ class Chat:
         self.client, self.think = ollama.Client(host=os.environ.get("OLLAMA_HOST", "127.0.0.1:11434")), think
     def chat(self, **kw):
         if self.think is not None: kw["think"] = self.think
+        if os.environ.get("NUM_PREDICT"): kw.setdefault("options", {})["num_predict"] = int(os.environ["NUM_PREDICT"])   # reasoning models (Nov 2026)
         return self.client.chat(**kw)
 
 
@@ -68,8 +69,9 @@ def main():
     ap.add_argument("--num_ctx", type=int, default=8192)
     ap.add_argument("--n_test", type=int, default=None, help="smoke test")
     ap.add_argument("--out", default=os.path.join(PROJ, "Results", "fewshot_curve198"))
+    ap.add_argument("--only", default=None, help="run only these settings, e.g. k5_pool198")
     args = ap.parse_args()
-    fs.ollama = Chat(False if args.model.startswith("qwen") else None)
+    fs.ollama = Chat(os.environ.get("THINK") or (False if args.model.startswith("qwen") else None))   # THINK=low for gpt-oss (Nov 2026)
     df = fs.load_expert_data(os.path.join(HERE, "Two_Expert_Annotation_Comparision.xlsx"), None)
     train_df, test_df = fs.make_split(df, os.path.join(HERE, "train_test_split_expert.xlsx"))
     assert len(train_df) == N_TRAIN and len(test_df) == N_TEST, (len(train_df), len(test_df))
@@ -87,14 +89,14 @@ def main():
     for k, n, r, pool in settings:
         name = f"k{k}_pool{n}" + (f"_r{r}" if r else "")
         path = os.path.join(od, name + ".csv")
-        if os.path.exists(path): continue
+        if os.path.exists(path) or (args.only and name not in args.only.split(",")): continue
         s = {"model": args.model, "k": k, "pool": n, "draw": r, **run_setting(args.model, k, pool, test_df, path, args)}
         summ.append(s); pd.DataFrame(summ).to_csv(summ_path, index=False)
         print(json.dumps(s), flush=True)
     # prompt sensitivity: this script's shorter system prompt, no examples, on all 264 expert reports (annotated text),
     # to compare with the zero-shot runs (cardiac_mri_llm_5class.SYSTEM_PROMPT) on the same reports
     path = os.path.join(od, "k0_expert264.csv")
-    if not os.path.exists(path):
+    if not os.path.exists(path) and not args.only:
         e = pd.DataFrame([json.loads(l) for l in open(os.path.join(PROJ, "Results", "finetune_llm", "data", "B_test_expert264.jsonl"))])
         e = e.rename(columns={"text": "report_text", "label": "gold_label"})
         if args.n_test: e = e.head(args.n_test)

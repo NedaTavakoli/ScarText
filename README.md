@@ -45,11 +45,16 @@ The LLMs are **public open-weight models used without training**, so there is no
 
 | Model | Download | Paper accuracy (zero-shot, 264 reports) | Hardware |
 |---|---|---|---|
-| Qwen3-32B | `ollama pull qwen3:32b` (~20 GB) | 89.8% | GPU with ≥24 GB, or a Mac with ≥32 GB |
-| Llama-3.1-70B | `ollama pull llama3.1:70b` (~43 GB) | 88.3% | ≥48 GB |
-| Llama-3.1-8B | `ollama pull llama3.1:8b` (~5 GB) | 79.2% | a laptop, or free Colab |
+| gpt-oss-20b (OpenAI, open-weight; runs locally, unlike cloud GPT-4) | `ollama pull gpt-oss:20b` (~13 GB; needs a recent Ollama) | 90.9% | GPU with ≥16 GB, or a Mac with ≥24 GB; about 2 s per report |
+| Qwen3-32B (Alibaba) | `ollama pull qwen3:32b` (~20 GB) | 89.8% | GPU with ≥24 GB, or a Mac with ≥32 GB |
+| Llama-3.1-70B (Meta) | `ollama pull llama3.1:70b` (~43 GB) | 88.3% | ≥48 GB |
+| Llama-3.3-70B (Meta) | `ollama pull llama3.3:70b` (~43 GB) | 87.9% | ≥48 GB |
+| MedGemma-27B (Google) | `ollama pull medgemma:27b` (~17 GB; needs a recent Ollama) | 84.5% | GPU with ≥24 GB |
+| Llama-3.1-8B (Meta) | `ollama pull llama3.1:8b` (~5 GB) | 79.2% | a laptop, or free Colab |
 
-`classify_llm` talks to Ollama at `http://127.0.0.1:11434` on your own machine (change it with `host=` or `OLLAMA_HOST_URL`). The model weights are not redistributed here and keep their own licenses (Llama 3.1 Community License; Apache 2.0 for Qwen3).
+gpt-oss-20b reasons before it answers; `classify_llm` runs it at its lowest reasoning level with a 4,096-token output cap, as in the paper.
+
+`classify_llm` talks to Ollama at `http://127.0.0.1:11434` on your own machine (change it with `host=` or `OLLAMA_HOST_URL`). The model weights are not redistributed here and keep their own licenses (Llama 3.1 and 3.3 Community Licenses; Apache 2.0 for Qwen3 and gpt-oss; Health AI Developer Foundations terms for MedGemma).
 
 **Few-shot:** pass your own labeled reports, `classify_llm(text, model=..., examples=df)` with columns `report_text` and `gold_label`; five similar examples, one per class first, are put in each prompt, as in the paper. The paper's expert-labeled reports are not distributed.
 
@@ -60,13 +65,16 @@ On 264 expert-labeled reports (two blinded readers, κ = 0.995):
 | Method | Accuracy |
 |---|---|
 | Rule-based NLP | 90.2% (95% CI 86.0–93.2); all 37,869 reports in under 4 minutes on a CPU |
+| gpt-oss-20b, zero-shot | 90.9% |
 | Qwen3-32B, zero-shot | 89.8% (85.5–92.9) |
 | Llama-3.1-70B, zero-shot | 88.3% |
+| Llama-3.3-70B, zero-shot | 87.9% |
+| MedGemma-27B, zero-shot | 84.5% |
 | Llama-3.1-8B, zero-shot | 79.2% |
 | MedGemma-4B-IT, zero-shot | 57.2% |
 | Flan-T5-base, zero-shot | ≤20.8% |
 
-On the 66 held-out reports, few-shot prompting (5 examples) reached 95.5% for Qwen3-32B and 90.9% for Llama-3.1-70B (rule-based NLP: 92.4%). Where the rules and zero-shot Qwen3-32B agreed (85.6% of reports), 97.8% were correct.
+gpt-oss-20b, Qwen3-32B, Llama-3.1-70B and Llama-3.3-70B did not differ from the rules; Llama-3.3-70B, gpt-oss-20b and MedGemma-27B were added after the main analysis. On the 66 held-out reports, few-shot prompting (5 examples) reached 95.5% for Qwen3-32B, 92.4% for Llama-3.3-70B, 90.9% for Llama-3.1-70B and gpt-oss-20b, and 87.9% for MedGemma-27B (rule-based NLP: 92.4%). Where the rules and zero-shot Qwen3-32B agreed (85.6% of reports), 97.8% were correct.
 
 The rules were derived by a cardiologist and two cardiothoracic radiologists, and their accuracy was measured against the radiologists' blinded labels.
 
@@ -80,6 +88,9 @@ Every model in the paper has its script in `src/`. The tool (`classify_llm`) off
 | Qwen3-32B | Ollama | `src/cardiac_mri_llm_5class.py`, `src/rerun_llm_expert264.py` | 89.8% |
 | Llama-3.1-70B | Ollama | same | 88.3% |
 | Llama-3.1-8B | Ollama | same | 79.2% |
+| Llama-3.3-70B | Ollama | same | 87.9% |
+| gpt-oss-20b | Ollama (recent version) | same, with `--think low --num_predict 4096` | 90.9% |
+| MedGemma-27B | Ollama (recent version) | same | 84.5% |
 | MedGemma-4B-IT | Hugging Face Transformers, 4-bit NF4 (needs accepting Google's terms for `google/medgemma-4b-it`) | `src/cardiac_mri_medgemma_fewshot.py` | 57.2% |
 | Flan-T5-base | Hugging Face Transformers (512-token input) | `src/cardiac_mri_flanT5_5class.py` | ≤20.8% |
 | Few-shot (k=5), all Ollama models and MedGemma | as above | `src/cardiac_mri_llm_fewshot_all.py`, `src/fewshot_curve.py`, `src/fewshot_order_test.py` | see the paper |

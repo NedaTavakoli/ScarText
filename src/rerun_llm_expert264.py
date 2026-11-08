@@ -97,7 +97,7 @@ def _chat(model, messages, options, think):
     return ollama.chat(model=model, messages=messages, options=options, think=think)
 
 
-def call_ollama(report_text, model, num_ctx, max_chars=5000, retries=6, think=None):
+def call_ollama(report_text, model, num_ctx, max_chars=5000, retries=6, think=None, num_predict=512):
     """cardiac_mri_llm_5class.call_ollama + num_ctx + diagnostics (same decision logic):
     failed calls, unparseable replies and out-of-taxonomy classes are recorded as missing
     (scar_type_llm=None), never as not-specified."""
@@ -106,7 +106,7 @@ def call_ollama(report_text, model, num_ctx, max_chars=5000, retries=6, think=No
     diag = {"prompt_tokens": None, "output_tokens": None, "done_reason": None,
             "thinking_chars": 0, "llm_raw": ""}
     messages = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}]
-    options = {"temperature": 0.0, "seed": 42, "num_predict": 512, "num_ctx": num_ctx}
+    options = {"temperature": 0.0, "seed": 42, "num_predict": num_predict, "num_ctx": num_ctx}
     missing = lambda status, ev: {"scar_type_llm": None, "llm_confidence": 0.0, "llm_evidence": ev,
                                   "parse_status": status, "llm_status": status, **diag}
     for attempt in range(retries + 1):
@@ -157,7 +157,8 @@ def main():
     ap.add_argument("--model", default="llama3.1:8b",
                     help="Ollama tag, e.g. llama3.1:8b, llama3.1:70b, qwen3.8:27b")
     ap.add_argument("--num_ctx", type=int, default=8192)
-    ap.add_argument("--think", choices=["off", "on", "default"], default=None,
+    ap.add_argument("--num_predict", type=int, default=512, help="output token cap (reasoning models need more; Nov 2026)")
+    ap.add_argument("--think", choices=["off", "on", "default", "low", "medium", "high"], default=None,
                     help="Reasoning mode for models that have one (default: off for non-Llama "
                          "models, not sent for Llama)")
     ap.add_argument("--n", type=int, default=None, help="limit to first N reports (smoke test)")
@@ -169,7 +170,7 @@ def main():
     os.makedirs(args.out_dir, exist_ok=True)
     is_llama = args.model.startswith("llama")
     mode = args.think or ("default" if is_llama else "off")
-    think = {"off": False, "on": True, "default": None}[mode]
+    think = {"off": False, "on": True, "default": None}.get(mode, mode)   # gpt-oss takes a level: low / medium / high
 
     df = load_expert264(args.text_source)
     if args.n:
@@ -182,7 +183,7 @@ def main():
     rows, t0 = [], time.time()
     for _, r in tqdm(df.iterrows(), total=len(df)):
         text = str(r["cardiac MRI text"])
-        res = call_ollama(text, args.model, args.num_ctx, think=think)
+        res = call_ollama(text, args.model, args.num_ctx, think=think, num_predict=args.num_predict)
         res = postprocess(res, text)
         res["excluded_by_postprocess"] = str(res.get("llm_status")).startswith("excluded")
         rows.append(res)

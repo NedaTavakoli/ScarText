@@ -73,6 +73,14 @@ def ollama_available(host=DEFAULT_HOST):
         return []
 
 
+def _settings(model):
+    """gpt-oss reasons before it answers, so it runs at its lowest reasoning level with a 4,096-token output cap,
+    as in the paper; the other models are asked to answer directly."""
+    if model.startswith("gpt-oss"):
+        return "low", dict(OPTIONS, num_predict=4096)
+    return False, OPTIONS
+
+
 def classify_llm(text, model="qwen3:32b", examples=None, host=DEFAULT_HOST, timeout=300):
     """Classify one report with a local LLM.
 
@@ -95,6 +103,7 @@ def classify_llm(text, model="qwen3:32b", examples=None, host=DEFAULT_HOST, time
                 classify_llm._retriever = fs.FewShotRetriever(pool, knn_pool=15)
             classify_llm._key = key
         system, user = fs.SYSTEM_PROMPT, fs.build_few_shot_prompt(text, classify_llm._retriever.retrieve(text, 5))
-    payload = {"model": model, "stream": False, "think": False, "options": OPTIONS,
+    think, options = _settings(model)
+    payload = {"model": model, "stream": False, "think": think, "options": options,
                "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
     return parse_answer(_post(host, "/api/chat", payload, timeout)["message"]["content"])
