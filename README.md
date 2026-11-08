@@ -4,7 +4,7 @@
 
 [![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face-yellow)](https://huggingface.co/spaces/tavakolineda/CMRReportAnalyzer) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb)
 
-Code for the paper **"Can AI Identify Myocardial Scar Etiology from Cardiac MRI Reports? Benchmarking Large Language Models vs. Natural Language Processing at Scale"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
+Code for the paper **"CMRReportAnalyzer: Can Large Language Models Match Expert Rules in Identifying Myocardial Scar Etiology from Cardiac MRI Reports?"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
 
 **Research use only. Not for clinical use.**
 
