@@ -12,7 +12,7 @@ def _load_engine():
     global _engine
     if _engine is None:
         path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "demo", "engine.py")
-        spec = importlib.util.spec_from_file_location("cmrreportanalyzer_demo_engine", path)
+        spec = importlib.util.spec_from_file_location("scartext_demo_engine", path)
         _engine = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(_engine)
     return _engine

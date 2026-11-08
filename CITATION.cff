@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code, please cite the paper."
-title: "Code for: CMRReportAnalyzer: Can Large Language Models Match Expert Rules in Identifying Myocardial Scar Etiology from Cardiac MRI Reports?"
+title: "Code for: ScarText: Can Large Language Models Match Expert Rules in Classifying Myocardial Scar Patterns from Cardiac MRI Reports?"
 authors:
   - family-names: Tavakoli
     given-names: Neda
@@ -15,5 +15,5 @@ authors:
   - family-names: Kim
     given-names: Daniel
 license: MIT
-repository-code: "https://github.com/NedaTavakoli/CMRReportAnalyzer"
+repository-code: "https://github.com/NedaTavakoli/ScarText"
 version: "0.1.0"

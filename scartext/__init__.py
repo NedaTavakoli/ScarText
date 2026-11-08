@@ -1,6 +1,6 @@
-"""CMRReportAnalyzer: classify myocardial scar etiology from free-text cardiac MRI reports.
+"""ScarText: classify myocardial scar patterns from free-text cardiac MRI reports.
 
-    from cmrreportanalyzer import classify_scar, extract_lvef, classify_llm, compare, analyze_csv
+    from scartext import classify_scar, extract_lvef, classify_llm, compare, analyze_csv
 
 - classify_scar(text): the paper's rule-based NLP (no GPU, deterministic).
 - extract_lvef(text): LVEF in percent, if the report states it.

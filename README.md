@@ -1,10 +1,10 @@
-# CMRReportAnalyzer
+# ScarText
 
-**Classify myocardial scar etiology from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no-scar or not-specified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
+**Classify myocardial scar patterns from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no-scar or not-specified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
 
-[![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face-yellow)](https://huggingface.co/spaces/tavakolineda/CMRReportAnalyzer) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb)
+[![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face-yellow)](https://huggingface.co/spaces/tavakolineda/ScarText) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/ScarText/blob/main/notebooks/quickstart.ipynb)
 
-Code for the paper **"CMRReportAnalyzer: Can Large Language Models Match Expert Rules in Identifying Myocardial Scar Etiology from Cardiac MRI Reports?"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
+Code for the paper **"ScarText: Can Large Language Models Match Expert Rules in Classifying Myocardial Scar Patterns from Cardiac MRI Reports?"** (Tavakoli N, Rahsepar AA, Ozturk O, Bagci U, Lee DC, Kim D; under review).
 
 **Research use only. Not for clinical use.**
 
@@ -14,22 +14,22 @@ Code for the paper **"CMRReportAnalyzer: Can Large Language Models Match Expert 
 
 Each report is shown with three results side by side: the rule-based NLP, zero-shot Qwen3-32B and few-shot Qwen3-32B. Where an LLM agrees with the rules the report is accepted; where it disagrees, it is flagged for expert review. All reports shown are synthetic. [Watch the full video (36 s)](demo/CMR_scar_demo_synthetic.mp4).
 
-**Try it online:** the [live demo](https://huggingface.co/spaces/tavakolineda/CMRReportAnalyzer) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules only; the LLMs run on your own computer (below). Do not upload identifiable patient information.
+**Try it online:** the [live demo](https://huggingface.co/spaces/tavakolineda/ScarText) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules only; the LLMs run on your own computer (below). Do not upload identifiable patient information.
 
 ## Quick start
 
-**In the browser:** open the [quickstart notebook in Colab](https://colab.research.google.com/github/NedaTavakoli/CMRReportAnalyzer/blob/main/notebooks/quickstart.ipynb).
+**In the browser:** open the [quickstart notebook in Colab](https://colab.research.google.com/github/NedaTavakoli/ScarText/blob/main/notebooks/quickstart.ipynb).
 
 **On your computer:**
 
 ```bash
-git clone https://github.com/NedaTavakoli/CMRReportAnalyzer.git
-cd cmrreportanalyzer
+git clone https://github.com/NedaTavakoli/ScarText.git
+cd ScarText
 pip install -r notebooks/requirements-notebook.txt
 ```
 
 ```python
-from cmrreportanalyzer import classify_scar, extract_lvef, classify_llm, compare, analyze_csv
+from scartext import classify_scar, extract_lvef, classify_llm, compare, analyze_csv
 
 text = open("examples/synthetic_reports/mixed.txt").read()
 classify_scar(text)                       # 'mixed'   (rule-based NLP, no GPU)
@@ -90,7 +90,7 @@ The scripts read the study's reports, which are not distributed; point `CMR_DATA
 
 | Path | What it is |
 |---|---|
-| `cmrreportanalyzer/` | The tool: `classify_scar`, `extract_lvef`, `explain`, `show_report` (report in color), `classify_llm`, `compare`, `analyze_csv` |
+| `scartext/` | The tool: `classify_scar`, `extract_lvef`, `explain`, `show_report` (report in color), `classify_llm`, `compare`, `analyze_csv` |
 | `notebooks/quickstart.ipynb` | Step-by-step notebook (rules, your own report, zero-shot, agreement, few-shot, CSV) |
 | `examples/synthetic_reports/` | Six synthetic reports, one per class plus a negated-wording no-scar case |
 | `demo/` | Local web demo (Gradio): NLP, zero-shot and optional few-shot side by side |
