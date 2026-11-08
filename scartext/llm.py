@@ -1,6 +1,6 @@
 """Zero-shot and few-shot classification with a local LLM through Ollama, as in the paper.
 
-Prompts come from the paper's scripts in src/ (zero-shot: cardiac_mri_llm_5class.py; few-shot:
+Prompts come from the paper's scripts in paper_scripts/ (zero-shot: cardiac_mri_llm_5class.py; few-shot:
 cardiac_mri_llm_fewshot_all.py). Settings: temperature 0, seed 42, 8,192-token context, at most 512
 output tokens, reasoning off. An answer that is not one of the five classes is returned as None (missing).
 Report text is sent only to the Ollama server at `host` (default: this computer).

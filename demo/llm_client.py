@@ -1,7 +1,7 @@
 """Zero-shot LLM slot, as in the paper: a locally served open-weight model called through Ollama.
 
 The prompt is the paper's zero-shot prompt (SYSTEM_PROMPT and USER_TEMPLATE in
-src/cardiac_mri_llm_5class.py), read from that file so the two cannot drift. Settings
+paper_scripts/cardiac_mri_llm_5class.py), read from that file so the two cannot drift. Settings
 match the paper: temperature 0, seed 42, 8,192-token context, at most 512 output tokens,
 and reasoning ("thinking") off. The model's own answer is used, with no keyword rule.
 
@@ -10,7 +10,7 @@ Set CMR_LLM_URL to change it, or to an empty value to turn the LLM off, and
 CMR_LLM_MODEL to choose the model (default qwen3:32b, the paper's best zero-shot model).
 Any failure returns an LLMResult with no label, and the app then shows the NLP result alone.
 
-Few-shot (opt-in, CMR_DEMO_FEWSHOT=1) uses the paper's few-shot code (src/cardiac_mri_llm_fewshot_all.py):
+Few-shot (opt-in, CMR_DEMO_FEWSHOT=1) uses the paper's few-shot code (paper_scripts/cardiac_mri_llm_fewshot_all.py):
 for each report, k=5 examples are retrieved from the 198 expert-labeled training reports
 (Results/finetune_llm/data/A_train_expert198.jsonl) and added to the prompt. These are real study reports:
 they are sent only to the Ollama server and are never shown on screen.
@@ -35,7 +35,7 @@ HEALTH_TIMEOUT_S = 3
 CLASSIFY_TIMEOUT_S = 300
 MAX_CHARS = 5000   # the paper's report truncation
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROMPT_SOURCE = os.path.join(PROJECT_DIR, "src", "cardiac_mri_llm_5class.py")
+PROMPT_SOURCE = os.path.join(PROJECT_DIR, "paper_scripts", "cardiac_mri_llm_5class.py")
 FEWSHOT_POOL = os.path.join(PROJECT_DIR, "Results", "finetune_llm", "data", "A_train_expert198.jsonl")
 FEWSHOT_K = 5
 
@@ -124,7 +124,7 @@ class FewShotOllamaBackend(OllamaBackend):
         self.url, self.model = url.rstrip("/"), model
         import sys
         import pandas as pd
-        sys.path.insert(0, os.path.join(PROJECT_DIR, "src"))
+        sys.path.insert(0, os.path.join(PROJECT_DIR, "paper_scripts"))
         with contextlib.redirect_stdout(io.StringIO()):   # the module prints setup notes
             import cardiac_mri_llm_fewshot_all as fs
             rows = [json.loads(line) for line in open(pool_path, encoding="utf-8")]

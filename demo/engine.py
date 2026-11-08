@@ -1,6 +1,6 @@
 """Rule-based NLP wrapper and HTML rendering for the demo.
 
-Classification comes unchanged from src/cardiac_mri_nlp_5class.py. This file
+Classification comes unchanged from paper_scripts/cardiac_mri_nlp_5class.py. This file
 only explains that result: it adds the exclusion reason, the trigger highlights,
 and the result cards.
 """
@@ -11,7 +11,7 @@ import re
 import sys
 from unittest import mock
 
-SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "paper_scripts")
 
 
 def _import_nlp():

@@ -4,7 +4,7 @@
 
 This local Gradio app classifies a cardiac MRI report as ischemic, non-ischemic, mixed, no-scar, or not-specified, the way the paper does:
 
-- **Rule-based NLP:** the study's rules (`src/cardiac_mri_nlp_5class.py`, unchanged), with the terms they look for highlighted.
+- **Rule-based NLP:** the study's rules (`paper_scripts/cardiac_mri_nlp_5class.py`, unchanged), with the terms they look for highlighted.
 - **Zero-shot LLM:** an open-weight model served locally by Ollama, with the paper's zero-shot prompt and settings. No model is trained.
 - **Agreement:** whether the two agree. In the paper, where the rules and zero-shot Qwen3-32B agreed (85.6% of the 264 expert reports), 97.8% were correct, so the app flags disagreements for expert review.
 
@@ -49,8 +49,8 @@ Settings: `CMR_LLM_URL` (default `http://127.0.0.1:11434`; empty turns the LLMs 
 
 Both LLMs use the paper's code and settings: temperature 0, seed 42, an 8,192-token context window, at most 512 output tokens, reasoning off, and the paper's parser. An answer that is not one of the five classes is shown as missing, as in the paper, and no keyword rule changes the model's answer.
 
-- **Zero-shot:** the prompt is read from `src/cardiac_mri_llm_5class.py`.
-- **Few-shot (opt-in):** start the demo with `CMR_DEMO_FEWSHOT=1 ./demo/run.sh`. A third card shows the few-shot class. It uses `src/cardiac_mri_llm_fewshot_all.py`: for each report, 5 examples are taken from the 198 expert-labeled training reports by TF-IDF similarity, one per class first, and placed in the prompt. **These examples are real study reports.** In the study they were read from `Results/finetune_llm/data/A_train_expert198.jsonl`, which is not distributed; to use your own labeled reports, set `CMR_FEWSHOT_POOL` to a JSON-lines file with `report_id`, `text` and `label` fields. They are sent only to the Ollama server and never shown on screen. Keep few-shot mode on approved computers, and leave it off for recordings shared outside the team.
+- **Zero-shot:** the prompt is read from `paper_scripts/cardiac_mri_llm_5class.py`.
+- **Few-shot (opt-in):** start the demo with `CMR_DEMO_FEWSHOT=1 ./demo/run.sh`. A third card shows the few-shot class. It uses `paper_scripts/cardiac_mri_llm_fewshot_all.py`: for each report, 5 examples are taken from the 198 expert-labeled training reports by TF-IDF similarity, one per class first, and placed in the prompt. **These examples are real study reports.** In the study they were read from `Results/finetune_llm/data/A_train_expert198.jsonl`, which is not distributed; to use your own labeled reports, set `CMR_FEWSHOT_POOL` to a JSON-lines file with `report_id`, `text` and `label` fields. They are sent only to the Ollama server and never shown on screen. Keep few-shot mode on approved computers, and leave it off for recordings shared outside the team.
 
 ## Using it
 

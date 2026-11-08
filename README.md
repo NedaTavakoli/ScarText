@@ -8,13 +8,25 @@ Code for the paper **"ScarText: Can Large Language Models Match Expert Rules in 
 
 **Research use only. Not for clinical use.**
 
+## What's in this repository
+
+| Folder | What it is | Who it is for |
+|---|---|---|
+| [`scartext/`](scartext) | **The tool.** A small Python package: `classify_scar` (rules), `classify_llm` (local LLM), `compare`, `analyze_csv`, `extract_lvef`, `explain`, `show_report` | Anyone who wants to classify their own reports |
+| [`notebooks/`](notebooks) | `quickstart.ipynb`: a step-by-step tour that runs in Google Colab | First-time users |
+| [`demo/`](demo) | A local web app showing the rules and an LLM side by side | Anyone who wants to try it with a browser |
+| [`examples/synthetic_reports/`](examples/synthetic_reports) | Six made-up reports, one per class plus a negated no-scar wording | Testing |
+| [`paper_scripts/`](paper_scripts) | The paper's original research scripts (rules, every LLM, few-shot, pool-size curves, order test), unchanged in logic | Reviewers and anyone reproducing the paper |
+
+In short: **use `scartext/`; read `paper_scripts/` to see exactly how the paper's numbers were produced.** No patient data are included anywhere.
+
 ## Demo
 
 [![Demo: rule-based NLP, zero-shot and few-shot Qwen3-32B on synthetic reports](demo/demo_preview.gif)](demo/CMR_scar_demo_synthetic.mp4)
 
 Each report is shown with three results side by side: the rule-based NLP, zero-shot Qwen3-32B and few-shot Qwen3-32B. Where an LLM agrees with the rules the report is accepted; where it disagrees, it is flagged for expert review. All reports shown are synthetic. [Watch the full video (36 s)](demo/CMR_scar_demo_synthetic.mp4).
 
-**Try it online:** the [live demo](https://huggingface.co/spaces/tavakolineda/ScarText) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules only; the LLMs run on your own computer (below). Do not upload identifiable patient information.
+**Try it online:** the [live demo](https://huggingface.co/spaces/tavakolineda/ScarText) classifies any report you paste or upload (.txt or .docx) with the rule-based NLP and highlights the terms it uses. It runs the rules and zero-shot Qwen3-32B on Hugging Face's shared GPUs; the other LLMs and few-shot prompting run on your own computer (below). Do not upload identifiable patient information.
 
 ## Quick start
 
@@ -80,32 +92,22 @@ The rules were derived by a cardiologist and two cardiothoracic radiologists, an
 
 ## Reproducing the paper
 
-Every model in the paper has its script in `src/`. The tool (`classify_llm`) offers the Ollama models, which matched the rules; MedGemma-4B-IT and Flan-T5-base ran through Hugging Face Transformers in the paper and are kept as research scripts.
+Every model in the paper has its script in `paper_scripts/`. The tool (`classify_llm`) offers the Ollama models, which matched the rules; MedGemma-4B-IT and Flan-T5-base ran through Hugging Face Transformers in the paper and are kept as research scripts.
 
 | Model | Runner in the paper | Script | Zero-shot accuracy (264 reports) |
 |---|---|---|---|
-| Rule-based NLP | Python / PySpark (CPU) | `src/cardiac_mri_nlp_5class.py` | 90.2% |
-| Qwen3-32B | Ollama | `src/cardiac_mri_llm_5class.py`, `src/rerun_llm_expert264.py` | 89.8% |
+| Rule-based NLP | Python / PySpark (CPU) | `paper_scripts/cardiac_mri_nlp_5class.py` | 90.2% |
+| Qwen3-32B | Ollama | `paper_scripts/cardiac_mri_llm_5class.py`, `paper_scripts/rerun_llm_expert264.py` | 89.8% |
 | Llama-3.1-70B | Ollama | same | 88.3% |
 | Llama-3.1-8B | Ollama | same | 79.2% |
 | Llama-3.3-70B | Ollama | same | 87.9% |
 | gpt-oss-20b | Ollama (recent version) | same, with `--think low --num_predict 4096` | 90.9% |
 | MedGemma-27B | Ollama (recent version) | same | 84.5% |
-| MedGemma-4B-IT | Hugging Face Transformers, 4-bit NF4 (needs accepting Google's terms for `google/medgemma-4b-it`) | `src/cardiac_mri_medgemma_fewshot.py` | 57.2% |
-| Flan-T5-base | Hugging Face Transformers (512-token input) | `src/cardiac_mri_flanT5_5class.py` | ≤20.8% |
-| Few-shot (k=5), all Ollama models and MedGemma | as above | `src/cardiac_mri_llm_fewshot_all.py`, `src/fewshot_curve.py`, `src/fewshot_order_test.py` | see the paper |
+| MedGemma-4B-IT | Hugging Face Transformers, 4-bit NF4 (needs accepting Google's terms for `google/medgemma-4b-it`) | `paper_scripts/cardiac_mri_medgemma_fewshot.py` | 57.2% |
+| Flan-T5-base | Hugging Face Transformers (512-token input) | `paper_scripts/cardiac_mri_flanT5_5class.py` | ≤20.8% |
+| Few-shot (k=5), all Ollama models and MedGemma | as above | `paper_scripts/cardiac_mri_llm_fewshot_all.py`, `paper_scripts/fewshot_curve.py`, `paper_scripts/fewshot_order_test.py` | see the paper |
 
 The scripts read the study's reports, which are not distributed; point `CMR_DATA_DIR` at your own data.
-
-## Repository layout
-
-| Path | What it is |
-|---|---|
-| `scartext/` | The tool: `classify_scar`, `extract_lvef`, `explain`, `show_report` (report in color), `classify_llm`, `compare`, `analyze_csv` |
-| `notebooks/quickstart.ipynb` | Step-by-step notebook (rules, your own report, zero-shot, agreement, few-shot, CSV) |
-| `examples/synthetic_reports/` | Six synthetic reports, one per class plus a negated-wording no-scar case |
-| `demo/` | Local web demo (Gradio): NLP, zero-shot and optional few-shot side by side |
-| `src/` | The paper's research scripts, unchanged in logic: rule-based NLP, zero-shot (Llama, Qwen, MedGemma, Flan-T5), few-shot, and the few-shot curves and order test |
 
 ## Settings that matter
 
@@ -113,7 +115,7 @@ The paper found that deployment settings changed LLM accuracy as much as model s
 
 ## Data
 
-The study used 37,869 LGE cardiac MRI reports (2005–2025) from Northwestern Medicine. The reports, expert labels and model outputs contain protected health information and are **not distributed**. Everything in this repository runs on synthetic reports; the research scripts in `src/` read study data from the folder set by `CMR_DATA_DIR`.
+The study used 37,869 LGE cardiac MRI reports (2005–2025) from Northwestern Medicine. The reports, expert labels and model outputs contain protected health information and are **not distributed**. Everything in this repository runs on synthetic reports; the research scripts in `paper_scripts/` read study data from the folder set by `CMR_DATA_DIR`.
 
 ## Citation
 

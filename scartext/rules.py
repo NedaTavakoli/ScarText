@@ -1,11 +1,11 @@
-"""The paper's rule-based NLP (src/cardiac_mri_nlp_5class.py), imported without its PySpark batch dependency."""
+"""The paper's rule-based NLP (paper_scripts/cardiac_mri_nlp_5class.py), imported without its PySpark batch dependency."""
 
 import os
 import sys
 from typing import Optional
 from unittest import mock
 
-SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+SRC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "paper_scripts")
 
 
 def _import_nlp():

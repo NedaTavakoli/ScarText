@@ -1,6 +1,6 @@
 """Zero-shot Qwen3-32B for the online demo on Hugging Face ZeroGPU.
 
-Same prompt and parser as the paper (src/cardiac_mri_llm_5class.py, read by llm_client.load_prompt), greedy decoding
+Same prompt and parser as the paper (paper_scripts/cardiac_mri_llm_5class.py, read by llm_client.load_prompt), greedy decoding
 (temperature 0), reasoning off, at most 512 new tokens, report truncated to 5,000 characters. The paper ran
 Qwen3-32B through Ollama (4-bit GGUF); here it runs through Transformers with the official FP8 weights, so answers
 can differ slightly from the paper's runs. Used only on the Space (online mode); the local demo uses Ollama.

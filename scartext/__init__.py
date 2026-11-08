@@ -10,7 +10,7 @@
 - analyze_csv(path, text_column, ...): classify a column of reports and add the results as columns.
 - show_report(text): the report in color in a notebook, with the terms the rules use highlighted.
 
-The rule and prompt code is the paper's code in src/, unchanged. Research use only. Not for clinical use.
+The rule and prompt code is the paper's code in paper_scripts/, unchanged. Research use only. Not for clinical use.
 """
 
 from .rules import CLASSES, classify_scar, extract_lvef, explain
