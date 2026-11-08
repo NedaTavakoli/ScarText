@@ -201,11 +201,9 @@ def parse_args():
 # Data loading — mirrors _expert_load() in cardiac_mri_nlp_5class.py exactly
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Reports excluded from expert annotation (non-evaluable studies)
-# Note: these six report IDs are valid expert-labeled reports that were excluded by mistake (see the paper,
-# Methods and Figure 1); the list is kept unchanged so that the published 194/64 split is reproduced.
+# Reports the two readers excluded as not evaluable (270 -> 264 expert reports); none is in the train/test split.
 _EXPERT_EXCLUDED = {
-    'RPT0006', 'RPT0042', 'RPT0089', 'RPT0134', 'RPT0198', 'RPT0231'
+    'RPT0057', 'RPT0112', 'RPT0190', 'RPT0256', 'RPT0258', 'RPT0263'
 }
 
 def load_expert_data(expert_xlsx, source_xlsx):
@@ -712,7 +710,7 @@ def save_excel(all_model_results, k, args, out_path):
     n_test = len(next(iter(all_model_results.values()))['results'])
     ws['A1'] = f"Few-Shot LLM Results  |  k={k}  |  n_test={n_test}  |  split=75/25 seed=42"
     ws['A1'].font = Font(bold=True, name="Arial", size=12)
-    ws['A2'] = (f"Reference: Rule-Based NLP zero-shot = 92.2% (59/64), κ=0.887  |  "
+    ws['A2'] = (f"Reference: Rule-Based NLP zero-shot = 92.4% (61/66), κ=0.891  |  "
                 f"num_ctx={args.num_ctx}  |  missing predictions excluded and counted")
     ws['A2'].font = Font(italic=True, name="Arial", size=10, color="1F4E79")
 
@@ -726,7 +724,7 @@ def save_excel(all_model_results, k, args, out_path):
         c.alignment = Alignment(horizontal='center', wrap_text=True)
 
     # Reference row
-    ref = ['Rule-Based NLP', '0', '64', '92.2%', '59/64', '0.887',
+    ref = ['Rule-Based NLP', '0', '66', '92.4%', '61/66', '0.891',
            '[0.79–0.98]', '—', '—', '—', '—', '—', '—', '—', '0', '—']
     for ci, v in enumerate(ref, 1):
         ws.cell(row=5, column=ci, value=v).font = Font(bold=True, name="Arial",
@@ -860,7 +858,7 @@ def main():
     print(f"{'='*65}")
     print(f"  {'Model':<22} {'Acc':>7} {'κ':>7}  {'Δacc vs 0-shot':>15}")
     print(f"  {'─'*52}")
-    print(f"  {'NLP zero-shot (ref)':<22} {'92.2%':>7} {'0.887':>7}")
+    print(f"  {'NLP zero-shot (ref)':<22} {'92.4%':>7} {'0.891':>7}")
     for mkey, data in all_results.items():
         m  = data['metrics']
         zs_a, _ = zs.get(mkey, (0, 0))

@@ -4,9 +4,9 @@
 fewshot_order_test.py
 =====================
 Does Llama-3.1-8B copy the label of the last few-shot example? Repeats the k = 5 pool settings of fewshot_curve.py
-with the same examples in reversed order, on the held-out 64 reports, and compares with the original runs.
+with the same examples in reversed order, on the 66 held-out reports, and compares with the original runs.
 Control: k5_pool25_r1 in the original order, to check that a repeat run reproduces the original answers.
-Writes Results/fewshot_order_test/<model>/ and report-free comparison.csv; finished settings are skipped on restart.
+Writes Results/fewshot_order_test198/<model>/ and report-free comparison.csv; finished settings are skipped on restart.
 
 Usage
   OLLAMA_HOST=127.0.0.1:11435 python src/fewshot_order_test.py --model llama3.1:8b [--n_test 3]
@@ -19,7 +19,7 @@ sys.path.insert(0, HERE)
 import fewshot_curve as fc
 
 fs = fc.fs
-ORIG = os.path.join(fc.PROJ, "Results", "fewshot_curve")
+ORIG = os.path.join(fc.PROJ, "Results", "fewshot_curve198")
 
 
 def run_setting(model, pool_df, test_df, orig, path, reverse, args):
@@ -52,22 +52,22 @@ def main():
     ap.add_argument("--model", default="llama3.1:8b")
     ap.add_argument("--num_ctx", type=int, default=8192)
     ap.add_argument("--n_test", type=int, default=None, help="smoke test")
-    ap.add_argument("--full_pool", action="store_true", help="also test k = 5 from all 194 training reports, first")
+    ap.add_argument("--full_pool", action="store_true", help="also test k = 5 from all training reports, first")
     args = ap.parse_args()
     fs.ollama = fc.Chat(False if args.model.startswith("qwen") else None)  # thinking off for Qwen, as in fewshot_curve.py
     df = fs.load_expert_data(os.path.join(HERE, "Two_Expert_Annotation_Comparision.xlsx"), None)
     train_df, test_df = fs.make_split(df, os.path.join(HERE, "train_test_split_expert.xlsx"))
-    assert len(train_df) == 194 and len(test_df) == 64, (len(train_df), len(test_df))
+    assert len(train_df) == fc.N_TRAIN and len(test_df) == fc.N_TEST, (len(train_df), len(test_df))
     if args.n_test: test_df = test_df.head(args.n_test)
     tag = args.model.replace(":", "_")
-    od = os.path.join(fc.PROJ, "Results", "fewshot_order_test", tag + ("_smoke" if args.n_test else ""))
+    od = os.path.join(fc.PROJ, "Results", "fewshot_order_test198", tag + ("_smoke" if args.n_test else ""))
     os.makedirs(od, exist_ok=True)
     labels = dict(zip(train_df.report_id, train_df.gold_label))
     settings = [(n, r, True) for n in fc.POOLS for r in fc.DRAWS] + [(25, 1, False)]
-    if args.full_pool: settings = [(194, 0, True), (194, 0, False)] + settings
+    if args.full_pool: settings = [(fc.N_TRAIN, 0, True), (fc.N_TRAIN, 0, False)] + settings
     results = []
     for n, r, reverse in settings:
-        base = f"k5_pool{n}_r{r}" if n != 194 else "k5_pool194"
+        base = f"k5_pool{n}_r{r}" if n != fc.N_TRAIN else f"k5_pool{fc.N_TRAIN}"
         name = base + ("_reversed" if reverse else "_control")
         path = os.path.join(od, name + ".csv")
         orig = pd.read_csv(os.path.join(ORIG, tag, base + ".csv")).set_index("report_id")
@@ -75,7 +75,7 @@ def main():
             d = pd.read_csv(path)
         else:
             t0 = time.time()
-            if n == 194:
+            if n == fc.N_TRAIN:
                 pool = train_df
             else:
                 ids = {json.loads(l)["report_id"] for l in open(os.path.join(fc.SUB, f"n{n}_r{r}.jsonl"))}

@@ -3,16 +3,16 @@
 """
 fewshot_curve.py
 ================
-How many expert-labeled examples does an LLM need? Two curves on the held-out 64 reports, using the prompt,
+How many expert-labeled examples does an LLM need? Two curves on the 66 held-out reports, using the prompt,
 TF-IDF example retrieval, example format and num_ctx of cardiac_mri_llm_fewshot_all.py (imported, unchanged):
-  1. number of in-context examples: k = 0, 1, 2, 3, 5, 10, retrieved from all 194 training reports
+  1. number of in-context examples: k = 0, 1, 2, 3, 5, 10, retrieved from all 198 training reports
   2. size of the labeled pool the examples are retrieved from: 10, 25, 50, 100 reports (k = 5; three stratified
-     draws each, the subsets of finetune_llm/prep_subsets.py, shared with the fine-tuning curve); 194 = curve 1, k = 5
+     draws each, the subsets of finetune_llm/prep_subsets.py); 198 = curve 1, k = 5
 Then k = 0 on all 264 expert reports (k0_expert264.csv; pool = 0 in summary.csv), a prompt-sensitivity check: this
 prompt is shorter than the zero-shot prompt of cardiac_mri_llm_5class.py.
 No keyword guard: the model's own answer is scored (raw_label). Failed or unparseable replies are recorded as missing.
 Qwen is called with thinking off, as in the zero-shot run.
-Writes Results/fewshot_curve/<model>/k{k}_pool{n}[_r{r}].csv and summary.csv; finished settings are skipped on restart.
+Writes Results/fewshot_curve198/<model>/k{k}_pool{n}[_r{r}].csv and summary.csv; finished settings are skipped on restart.
 
 Usage
   OLLAMA_HOST=127.0.0.1:11435 python src/fewshot_curve.py --model llama3.1:8b [--n_test 3]
@@ -27,7 +27,8 @@ sys.path.insert(0, HERE)
 import cardiac_mri_llm_fewshot_all as fs
 import ollama
 
-SUB = os.path.join(PROJ, "Results", "finetune_llm", "data", "subsets")
+SUB = os.path.join(PROJ, "Results", "finetune_llm", "data", "subsets198")
+N_TRAIN, N_TEST = 198, 66   # the stratified 75/25 split of the 264 expert reports (Figure 1)
 KS, POOLS, DRAWS = [0, 1, 2, 3, 5, 10], [10, 25, 50, 100], [1, 2, 3]
 
 
@@ -66,20 +67,20 @@ def main():
     ap.add_argument("--model", required=True, help="Ollama tag: llama3.1:8b, llama3.1:70b, qwen3:32b")
     ap.add_argument("--num_ctx", type=int, default=8192)
     ap.add_argument("--n_test", type=int, default=None, help="smoke test")
-    ap.add_argument("--out", default=os.path.join(PROJ, "Results", "fewshot_curve"))
+    ap.add_argument("--out", default=os.path.join(PROJ, "Results", "fewshot_curve198"))
     args = ap.parse_args()
     fs.ollama = Chat(False if args.model.startswith("qwen") else None)
     df = fs.load_expert_data(os.path.join(HERE, "Two_Expert_Annotation_Comparision.xlsx"), None)
     train_df, test_df = fs.make_split(df, os.path.join(HERE, "train_test_split_expert.xlsx"))
-    assert len(train_df) == 194 and len(test_df) == 64, (len(train_df), len(test_df))
+    assert len(train_df) == N_TRAIN and len(test_df) == N_TEST, (len(train_df), len(test_df))
     if args.n_test: test_df = test_df.head(args.n_test)
     od = os.path.join(args.out, args.model.replace(":", "_") + ("_smoke" if args.n_test else ""))
     os.makedirs(od, exist_ok=True)
-    settings = [(k, 194, 0, train_df) for k in KS]
+    settings = [(k, N_TRAIN, 0, train_df) for k in KS]
     for n in POOLS:
         for r in DRAWS:
             ids = {json.loads(l)["report_id"] for l in open(os.path.join(SUB, f"n{n}_r{r}.jsonl"))}
-            assert ids <= set(train_df.report_id), f"subset n{n}_r{r} not within the 194 training reports"
+            assert ids <= set(train_df.report_id), f"subset n{n}_r{r} not within the {N_TRAIN} training reports"
             settings.append((5, n, r, train_df[train_df.report_id.isin(ids)].reset_index(drop=True)))
     summ_path = os.path.join(od, "summary.csv")
     summ = pd.read_csv(summ_path).to_dict("records") if os.path.exists(summ_path) else []

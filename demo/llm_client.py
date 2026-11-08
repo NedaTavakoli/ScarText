@@ -11,8 +11,8 @@ CMR_LLM_MODEL to choose the model (default qwen3:32b, the paper's best zero-shot
 Any failure returns an LLMResult with no label, and the app then shows the NLP result alone.
 
 Few-shot (opt-in, CMR_DEMO_FEWSHOT=1) uses the paper's few-shot code (src/cardiac_mri_llm_fewshot_all.py):
-for each report, k=5 examples are retrieved from the 194 expert-labeled training reports
-(Results/finetune_llm/data/A_train_expert.jsonl) and added to the prompt. These are real study reports:
+for each report, k=5 examples are retrieved from the 198 expert-labeled training reports
+(Results/finetune_llm/data/A_train_expert198.jsonl) and added to the prompt. These are real study reports:
 they are sent only to the Ollama server and are never shown on screen.
 """
 
@@ -36,7 +36,7 @@ CLASSIFY_TIMEOUT_S = 300
 MAX_CHARS = 5000   # the paper's report truncation
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROMPT_SOURCE = os.path.join(PROJECT_DIR, "src", "cardiac_mri_llm_5class.py")
-FEWSHOT_POOL = os.path.join(PROJECT_DIR, "Results", "finetune_llm", "data", "A_train_expert.jsonl")
+FEWSHOT_POOL = os.path.join(PROJECT_DIR, "Results", "finetune_llm", "data", "A_train_expert198.jsonl")
 FEWSHOT_K = 5
 
 
