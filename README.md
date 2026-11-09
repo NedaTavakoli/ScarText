@@ -93,7 +93,7 @@ table = analyze_csv("reports.csv", text_column="report_text", out_path="classifi
 table = analyze_csv("reports.csv", text_column="report_text", model="gpt-oss:20b")          # rules + LLM + decision
 ```
 
-**4. Few-shot with your own labeled reports:** pass a table with columns `report_text` and `gold_label`; for each report, the five most similar labeled reports (one per class first) go into the prompt, as in the paper. In the paper, 10 to 100 labeled reports brought the largest models to the accuracy of the rules.
+**4. Few-shot with your own labeled reports:** pass a table with columns `report_text` and `gold_label`; for each report, the five most similar labeled reports (one per class first) go into the prompt, as in the paper. In the paper, a pool of 10 (Qwen3-32B) to 198 (Llama-3.3-70B) labeled reports brought the largest models to the accuracy of the rules; gpt-oss-20b and MedGemma-27B gained little from examples (see *Labeled reports needed* below).
 
 ```python
 import pandas as pd
@@ -145,6 +145,18 @@ Correct classifications against an expert cardiothoracic radiologist (two blinde
 | Flan-T5-base (Google), impression only | 55 (20.8%) | 14 (21.2%) | not run (input too short) | 0.1 s |
 
 LLM times are on one NVIDIA A40 GPU. gpt-oss-20b, Qwen3-32B, Llama-3.1-70B and Llama-3.3-70B did not differ from the rules; Llama-3.3-70B, gpt-oss-20b and MedGemma-27B were added after the main analysis. Where the rules and zero-shot Qwen3-32B agreed (85.6% of reports), 97.8% were correct, and their disagreements held 21 of the 26 rule errors, which is why the package offers `compare` for a rules-first, LLM-as-second-reader workflow.
+
+**Labeled reports needed for few-shot prompting** (66 held-out reports; the rules get 61 right). Five examples per prompt were drawn from class-stratified pools of 10, 25, 50, 100 or all 198 labeled reports (three draws per size).
+
+| Model | Best mean, few-shot | More labels stop helping at | Matches the rules with |
+|---|---|---|---|
+| Qwen3-32B | 63 (95.5%) | 50 reports | 10 reports |
+| Llama-3.1-70B | 61.3 (92.9%) | 50 | 100 |
+| Llama-3.3-70B | 61 (92.4%) | 25 | 198 |
+| gpt-oss-20b | 60 (90.9%) | 10 | never (58 to 60 at every size) |
+| MedGemma-27B | 58 (87.9%) | 10 | never; most accurate without examples (62 of 66 with the few-shot prompt) |
+| Llama-3.1-8B | 48.3 (73.2%) | none | never |
+| MedGemma-4B-IT | 39 (59.1%) | 198 | never |
 
 The rules were derived by a cardiologist and two cardiothoracic radiologists, and their accuracy was measured against the radiologists' blinded labels.
 
