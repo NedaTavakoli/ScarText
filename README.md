@@ -1,6 +1,6 @@
 # ScarText
 
-**Classify myocardial scar patterns from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no-scar or not-specified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
+**Classify myocardial scar patterns from free-text cardiac MRI reports** — ischemic, non-ischemic, mixed, no scar or unspecified — with a rule-based NLP pipeline and open-weight LLMs that run on your own computer.
 
 [![Live demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20demo-Hugging%20Face-yellow)](https://huggingface.co/spaces/tavakolineda/ScarText) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NedaTavakoli/ScarText/blob/main/notebooks/quickstart.ipynb)
 
@@ -61,7 +61,7 @@ classify_scar("Late gadolinium enhancement: subendocardial scar of the inferior 
 | `show_report(text)` | Shows the report in a notebook with the terms the rules use highlighted | (display) |
 | `ollama_available()` | Lists the models your Ollama server offers | a list of model names (`[]` if Ollama is not running) |
 
-`CLASSES` is `('ischemic', 'non-ischemic', 'mixed', 'no-scar', 'not-specified')`.
+`CLASSES` is `('ischemic', 'non-ischemic', 'mixed', 'no-scar', 'not-specified')`; `no-scar` and `not-specified` are the paper's *no scar* and *unspecified* classes (the labels match the prompt used in the paper).
 
 **1. One report with the rules** (no GPU):
 

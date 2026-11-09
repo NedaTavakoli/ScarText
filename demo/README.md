@@ -2,7 +2,7 @@
 
 **Research use only. Not for clinical use.**
 
-This local Gradio app classifies a cardiac MRI report as ischemic, non-ischemic, mixed, no-scar, or not-specified, the way the paper does:
+This local Gradio app classifies a cardiac MRI report as ischemic, non-ischemic, mixed, no scar or unspecified, the way the paper does:
 
 - **Rule-based NLP:** the study's rules (`paper_scripts/cardiac_mri_nlp_5class.py`, unchanged), with the terms they look for highlighted.
 - **Zero-shot LLM:** an open-weight model served locally by Ollama, with the paper's zero-shot prompt and settings. No model is trained.

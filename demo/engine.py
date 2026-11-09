@@ -38,7 +38,7 @@ nlp = _import_nlp()
 
 CLASSES = nlp.CLASSES
 CLASS_COLORS = nlp._EXPERT_CLASS_COLORS
-CLASS_DISPLAY = nlp._EXPERT_CLASS_DISPLAY
+CLASS_DISPLAY = {**nlp._EXPERT_CLASS_DISPLAY, "no-scar": "No scar", "not-specified": "Unspecified"}   # names as in the paper; the label stays not-specified
 NEUTRAL_COLORS = nlp._EXPERT_NONE_COLOR
 
 CLASS_MEANING = {
